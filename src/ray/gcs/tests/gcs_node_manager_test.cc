@@ -52,9 +52,7 @@ class GcsNodeManagerTest : public ::testing::Test {
   std::unique_ptr<observability::FakeRayEventRecorder> fake_ray_event_recorder_;
 };
 
-// TODO(https://github.com/ray-project/ray/pull/56631): Re-enable
-// TestRayEventNodeEvents. It was temporarily disabled to unblock CI.
-TEST_F(GcsNodeManagerTest, DISABLED_TestRayEventNodeEvents) {
+TEST_F(GcsNodeManagerTest, TestRayEventNodeEvents) {
   RayConfig::instance().initialize(
       R"(
 {
