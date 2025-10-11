@@ -8,8 +8,7 @@ import pytest
 
 import ray
 from ray._private.test_utils import (
-    PrometheusTimeseries,
-    fetch_prometheus_metric_timeseries,
+    fetch_prometheus_metrics,
     wait_for_assertion,
 )
 from ray._common.network_utils import build_address
@@ -38,7 +37,6 @@ def _setup_cluster_for_test(request, ray_start_cluster):
     cluster = ray_start_cluster
     cluster.add_node(
         _system_config={
-            "metrics_report_interval_ms": 1000,
             "enable_metrics_collection": True,
             "metric_cardinality_level": core_metric_cardinality_level,
             "enable_open_telemetry": os.getenv("RAY_enable_open_telemetry") == "1",
@@ -85,8 +83,7 @@ def _cardinality_level_test(_setup_cluster_for_test, cardinality_level, metric):
     prom_addresses = _setup_cluster_for_test
 
     def _validate():
-        timeseries = PrometheusTimeseries()
-        metric_samples = fetch_prometheus_metric_timeseries(prom_addresses, timeseries)
+        metric_samples = fetch_prometheus_metrics(prom_addresses)
         samples = metric_samples.get(metric)
         assert samples, f"Metric {metric} not found in samples"
         for sample in samples:
